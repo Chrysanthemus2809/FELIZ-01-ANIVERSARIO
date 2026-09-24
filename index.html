@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Agujero Negro del Amor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&family=Quicksand:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Quicksand',sans-serif;}
+    canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;}
+
+    /* ── NUEVO MODAL ESTILO ROSA ── */
+    #modal{
+      position:fixed;inset:0;z-index:9999;
+      display:flex;justify-content:center;align-items:center;
+      background:#000;
+      transition:opacity 2s ease;
+    }
+    #modal.oculto{opacity:0;pointer-events:none;}
+
+    .card{
+      background:#fff;
+      border-radius:28px;
+      padding:26px 26px 30px;
+      width:min(340px, 88vw);
+      display:flex;flex-direction:column;align-items:center;gap:0;
+      box-shadow:0 6px 32px rgba(220,80,130,0.13);
+    }
+
+    .card-img-wrap{
+      width:100%;border-radius:14px;overflow:hidden;
+      border:none;
+      margin-bottom:22px;
+      aspect-ratio:4/3;
+      background:#0a0015;
+      position:relative;
+    }
+    .card-img-wrap img{
+      width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;
+    }
+
+    .card-quote{
+      font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;
+      font-size:clamp(1.15rem,4.5vw,1.35rem);
+      color:#1a1a2e;text-align:center;line-height:1.45;
+      margin-bottom:10px;
+    }
+    .card-sub{
+      font-size:0.62rem;font-weight:600;letter-spacing:5px;text-transform:uppercase;
+      color:rgba(180,80,140,0.55);margin-bottom:26px;
+      text-align:center;
+    }
+
+    #btn-entrar{
+      width:100%;
+      font-family:'Quicksand',sans-serif;font-size:0.74rem;font-weight:600;
+      letter-spacing:4px;text-transform:uppercase;
+      padding:1rem 0;
+      background:#fff;
+      color:#E0306A;
+      border:1.5px solid #E0306A;
+      border-radius:50px;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      display:flex;align-items:center;justify-content:center;gap:10px;
+    }
+    #btn-entrar:hover{background:#fdf0f4;}
+    #btn-entrar .heart{font-size:0.9rem;}
+
+    .top-text{
+      position:fixed;top:5%;left:50%;transform:translateX(-50%);
+      font-family:'Cormorant Garamond',serif;font-style:italic;
+      font-size:clamp(1.1rem,3.5vw,1.9rem);
+      color:rgba(255,210,235,0.82);z-index:10;pointer-events:none;white-space:nowrap;
+      text-shadow:0 0 28px rgba(255,100,180,0.45);display:none;
+    }
+    #hint{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,180,220,0.25);pointer-events:none;z-index:10;display:none;}
+
+        /* ESTILOS AÑADIDOS PARA EL MODAL FLOTANTE DE RECUERDOS */
+    #MODAL-FLOTANTE {
+      position: fixed; inset: 0; z-index: 10000;
+      display: flex; justify-content: center; align-items: center;
+      background: rgba(0, 0, 0, 0.85);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    #MODAL-FLOTANTE.ACTIVO {
+      opacity: 1; pointer-events: auto;
+    }
+    .CARD-FLOTANTE {
+      background: #1e1e1e;
+      border: 1px solid #d4af37;
+      border-radius: 20px;
+      padding: 20px;
+      width: min(320px, 85vw);
+      display: flex; flex-direction: column; align-items: center;
+      box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+      text-align: center;
+    }
+    .CARD-FLOTANTE IMG {
+      width: 100%; height: 200px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;
+    }
+    .CARD-FLOTANTE H3 {
+      color: #d4af37; font-size: 1.1rem; margin-bottom: 8px; font-family: 'Cormorant Garamond', serif;
+    }
+    .CARD-FLOTANTE P {
+      color: #e0e0e0; font-size: 0.9rem; margin-bottom: 15px;
+    }
+    .BTN-CERRAR-FLOTANTE {
+      background: #d4af37; color: #121212; border: none; border-radius: 20px;
+      padding: 8px 20px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
+
+      
+
+    }
+
+  </style>
+</head>
+<body>
+
+<div id="modal">
+  <div class="card">
+    <div class="card-img-wrap">
+      
+      <img src="Aniversario\teamo.jpg" alt="Galaxia" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/NGC_4414_%28NASA-med%29.jpg/600px-NGC_4414_%28NASA-med%29.jpg'">
+    </div>
+    <div class="card-quote">Eternamente a tu lado, juntos por siempre amor🪐</div>
+    <div class="card-sub">Nuestro universo... donde juntos escribiremos nuestra historia</div>
+    <button id="btn-entrar">
+      <span class="heart">♡</span> Toca aquí preciosa <span class="heart">♡</span>
+    </button>
+    
+  </div>
+</div>
+
+  <!-- HTML AÑADIDO PARA LA ESTRUCTURA DEL POPUP -->
+<div id="MODAL-FLOTANTE">
+  <div class="CARD-FLOTANTE">
+    <img id="IMG-FLOTANTE-POPUP" src="" alt="Recuerdo">
+    <h3 id="TXT-FLOTANTE-FECHA">Fecha</h3>
+    <p id="TXT-FLOTANTE-MENSAJE">Mensaje bonito</p>
+    <button id="cerrar" class="BTN-CERRAR-FLOTANTE">Cerrar</button>
+  </div>
+</div>
+
+
+<div class="top-text" id="top-text"> ♡</div>
+<div id="hint"></div>
+<canvas id="galaxy"></canvas>
+
+<audio id="musica" loop preload="auto">
+  <source src="https://github.com/Chrysanthemus2809/Hoyo-Negro/raw/refs/heads/main/gh.mp3" type="audio/mpeg">
+</audio>
+
+
+
+
+<script>
+document.getElementById('btn-entrar').addEventListener('click',()=>{
+  const m=document.getElementById('modal');
+  m.classList.add('oculto');
+  setTimeout(()=>m.style.display='none',1000);
+  document.getElementById('top-text').style.display='block';
+  const isMobile=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+  if(isMobile)document.getElementById('hint').style.display='block';
+  const a=document.getElementById('musica');a.currentTime=16;a.play().catch(()=>{});
+});
+</script>
+
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const isMobile=/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+
+const renderer=new THREE.WebGLRenderer({
+  canvas:document.getElementById('galaxy'),
+  antialias:!isMobile,alpha:true,powerPreference:'high-performance'
+});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,isMobile?1.5:2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=0.90;
+
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,0.1,200000);
+camera.position.set(0,isMobile?180:200,isMobile?1100:700);
+
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true;controls.dampingFactor=0.055;
+controls.minDistance=60;
+controls.maxDistance=Infinity;
+controls.zoomSpeed=isMobile?1.4:1.1;
+controls.rotateSpeed=isMobile?0.55:0.9;
+controls.enablePan=false;
+controls.minPolarAngle=Math.PI*0.2;
+controls.maxPolarAngle=Math.PI*0.8;
+controls.touches={ONE:THREE.TOUCH.ROTATE,TWO:THREE.TOUCH.DOLLY_PAN};
+
+const composer=new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight));
+bloom.threshold=0.65;bloom.strength=0.42;bloom.radius=0.30;
+composer.addPass(bloom);
+
+const col=new THREE.Color();
+
+(function(){
+  const n=isMobile?1200:2500;
+  const pos=new Float32Array(n*3),color=new Float32Array(n*3);
+  for(let i=0;i<n;i++){
+    const i3=i*3;
+    const theta=Math.random()*Math.PI*2;
+    const phi=Math.acos(2*Math.random()-1);
+    const r=12000+Math.random()*60000;
+    pos[i3]  =r*Math.sin(phi)*Math.cos(theta);
+    pos[i3+1]=r*Math.sin(phi)*Math.sin(theta);
+    pos[i3+2]=r*Math.cos(phi);
+    const t=Math.random();
+    if(t<0.55) col.setHSL(0.08,0.05,0.90+Math.random()*0.10);
+    else       col.setHSL(0.0,0.0,0.95);
+    color[i3]=col.r;color[i3+1]=col.g;color[i3+2]=col.b;
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  g.setAttribute('color',new THREE.BufferAttribute(color,3));
+  scene.add(new THREE.Points(g,new THREE.PointsMaterial({
+    size:isMobile?1.8:2.4,vertexColors:true,
+    blending:THREE.AdditiveBlending,transparent:true,opacity:0.65,depthWrite:false
+  })));
+})();
+
+
+
+let galaxyMesh,armsMesh;
+(function(){
+  const n=isMobile?35000:65000;
+  const pos=new Float32Array(n*3),color=new Float32Array(n*3);
+  const ARMS=5,SPIN=4.5,SPREAD=0.38,H=55;
+  for(let i=0;i<n;i++){
+    const i3=i*3;
+    const arm=i%ARMS;
+    const t=Math.pow(Math.random(),0.55);
+    const rad=60+t*980;
+    const baseAng=(arm/ARMS)*Math.PI*2;
+    const spinAng=t*SPIN;
+    const scatter=(Math.random()-.5)*SPREAD*(1+t*1.5);
+    pos[i3]  =Math.cos(baseAng+spinAng+scatter)*rad;
+    pos[i3+1]=(Math.random()-.5)*H*Math.exp(-rad/500);
+    pos[i3+2]=Math.sin(baseAng+spinAng+scatter)*rad;
+    const nt=rad/1050;
+    if(nt<0.1)       col.setHSL(0.05,0.15,0.96);
+    else if(nt<0.3)  col.setHSL(0.93+Math.random()*0.04,0.80,0.78+Math.random()*0.12);
+    else if(nt<0.6)  col.setHSL(0.95+Math.random()*0.04,0.85,0.62+Math.random()*0.15);
+    else             col.setHSL(0.88+Math.random()*0.06,0.90,0.48+Math.random()*0.18);
+    color[i3]=col.r;color[i3+1]=col.g;color[i3+2]=col.b;
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  g.setAttribute('color',new THREE.BufferAttribute(color,3));
+  galaxyMesh=new THREE.Points(g,new THREE.PointsMaterial({
+    size:isMobile?1.6:2.1,vertexColors:true,
+    blending:THREE.AdditiveBlending,transparent:true,depthWrite:false,opacity:0.92
+  }));
+  scene.add(galaxyMesh);
+})();
+
+(function(){
+  const n=isMobile?6000:11000;
+  const pos=new Float32Array(n*3),color=new Float32Array(n*3);
+  for(let i=0;i<n;i++){
+    const i3=i*3,t=i/n,arm=i%5,base=(arm/5)*Math.PI*2;
+    const r=70+t*960,ang=base+t*Math.PI*4.2;
+    pos[i3]=Math.cos(ang)*r;pos[i3+1]=(Math.random()-.5)*10;pos[i3+2]=Math.sin(ang)*r;
+    col.setHSL(0.94+Math.random()*0.04,0.25,0.92+Math.random()*0.08);
+    color[i3]=col.r;color[i3+1]=col.g;color[i3+2]=col.b;
+  }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  g.setAttribute('color',new THREE.BufferAttribute(color,3));
+  armsMesh=new THREE.Points(g,new THREE.PointsMaterial({
+    size:isMobile?2.5:3.2,vertexColors:true,
+    blending:THREE.AdditiveBlending,transparent:true,depthWrite:false
+  }));
+  scene.add(armsMesh);
+})();
+
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(42,64,64),new THREE.MeshBasicMaterial({color:0x000000})));
+
+const haloMat=new THREE.ShaderMaterial({
+  uniforms:{uTime:{value:0}},
+  vertexShader:`varying vec3 vN;void main(){vN=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+  fragmentShader:`uniform float uTime;varying vec3 vN;
+    void main(){
+      float rim=1.-max(dot(vN,vec3(0,0,1)),0.);
+      rim=pow(rim,3.0);float p=0.78+0.18*sin(uTime*1.8);
+      vec3 c=mix(vec3(.28,.0,.12),vec3(.95,.28,.62),rim)*rim*p;
+      gl_FragColor=vec4(c,rim*0.48);
+    }`,
+  transparent:true,side:THREE.FrontSide,depthWrite:false,blending:THREE.AdditiveBlending
+});
+scene.add(new THREE.Mesh(new THREE.SphereGeometry(53,64,64),haloMat));
+
+function mkDisk(inner,outer,c1,c2,c3,op,rx){
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0},uIn:{value:inner},uOut:{value:outer},
+      uC1:{value:new THREE.Color(c1)},uC2:{value:new THREE.Color(c2)},uC3:{value:new THREE.Color(c3)}},
+    vertexShader:`varying vec3 vP;void main(){vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`uniform float uTime,uIn,uOut;uniform vec3 uC1,uC2,uC3;varying vec3 vP;
+      float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+      void main(){
+        float r=length(vP.xy);float t=clamp((r-uIn)/(uOut-uIn),0.,1.);
+        vec3 c=t<.4?mix(uC1,uC2,t/.4):mix(uC2,uC3,(t-.4)/.6);
+        float ang=atan(vP.y,vP.x);float sw=h(vec2(r*.1,ang+uTime*.25))*.22;
+        float glow=(1.-t)*(1.-t)*1.1+sw*.25;
+        float a=(1.-t)*(1.-t*t)*${op.toFixed(2)}+sw*.08;
+        gl_FragColor=vec4(c*glow,clamp(a,0.,1.));
+      }`,
+    side:THREE.DoubleSide,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  const m=new THREE.Mesh(new THREE.RingGeometry(inner,outer,256,8),mat);
+  m.rotation.x=rx;scene.add(m);return mat;
+}
+const dM1=mkDisk(48,165,'#FFFFFF','#FFB8D8','#880044',0.60,Math.PI/2);
+const dM2=mkDisk(56,132,'#FFD6E8','#E8508A','#3D001A',0.32,Math.PI/2+0.13);
+const dM3=mkDisk(165,295,'#FF8CB8','#AA0050','#000000',0.16,Math.PI/2);
+
+function mkJet(dir){
+  const mat=new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0}},
+    vertexShader:`varying vec2 vU;void main(){vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+    fragmentShader:`uniform float uTime;varying vec2 vU;
+      void main(){
+        float f=pow(1.-vU.y,2.)*(1.-vU.x*2.);float p=.6+.28*sin(uTime*3.8+vU.y*9.);
+        vec3 c=mix(vec3(1.,.72,.88),vec3(.72,.0,.38),vU.y);
+        gl_FragColor=vec4(c*p,f*0.32);
+      }`,
+    transparent:true,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,depthWrite:false
+  });
+  const m=new THREE.Mesh(new THREE.ConeGeometry(8,225,32,1,true),mat);
+  m.position.y=dir*112;m.rotation.x=dir>0?0:Math.PI;scene.add(m);return mat;
+}
+const jM1=mkJet(1),jM2=mkJet(-1);
+
+const pN=300;
+const pGeo=new THREE.BufferGeometry(),pBuf=new Float32Array(pN*3),pA=[],pR=[];
+for(let i=0;i<pN;i++){
+  const a=Math.random()*Math.PI*2,r=52+Math.random()*210;
+  pA.push(a);pR.push(r);
+  pBuf[i*3]=Math.cos(a)*r;pBuf[i*3+1]=(Math.random()-.5)*7;pBuf[i*3+2]=Math.sin(a)*r;
+}
+pGeo.setAttribute('position',new THREE.BufferAttribute(pBuf,3));
+const diskPts=new THREE.Points(pGeo,new THREE.PointsMaterial({color:0xFFB0D0,size:2.0,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false}));
+scene.add(diskPts);
+
+function hXY(t){return{x:16*Math.pow(Math.sin(t),3),y:13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)};}
+const hN=isMobile?5000:8000,hP=new Float32Array(hN*3),hC=new Float32Array(hN*3);
+for(let i=0;i<hN;i++){
+  const i3=i*3,t=Math.random()*Math.PI*2,s=0.45+Math.random()*0.55,p=hXY(t);
+  hP[i3]=p.x*s*3.8;hP[i3+1]=p.y*s*3.8;hP[i3+2]=(Math.random()-.5)*12;
+  const d=Math.sqrt(p.x*p.x+p.y*p.y)/22;
+  const hue=0.94-d*0.04;
+  const lig=d<0.25?0.90-d*0.55:0.62-d*0.05;
+  col.setHSL(hue,0.95,Math.max(lig,0.40));
+  hC[i3]=col.r;hC[i3+1]=col.g;hC[i3+2]=col.b;
+}
+const hGeo=new THREE.BufferGeometry();
+hGeo.setAttribute('position',new THREE.BufferAttribute(hP,3));
+hGeo.setAttribute('color',new THREE.BufferAttribute(hC,3));
+const heart=new THREE.Points(hGeo,new THREE.PointsMaterial({
+  size:isMobile?2.1:2.6,vertexColors:true,
+  blending:THREE.NormalBlending,transparent:true,depthWrite:false,opacity:0.97
+}));
+heart.position.y=isMobile?100:135;scene.add(heart);
+
+const phrases=[
+  "Te amo Arliany","Eres mi todo","Siempre te amaré","Mi vida","Mi amor",
+  "Contigo siempre","Mi cielo","Mi princesa","Por siempre","Eres mi todo",
+  "Mi corazón","Eres luz","My Rose","Juntos siempre","Eres especial",
+  "Solo tú","Mi gran felicidad","Eres perfecta","Mi sueño","Gracias por existir",
+  "Eres mi todo","Me gustas mucho","Contigo es todo","Tú y yo","Mi mundo eres tú",
+  "Eternamente tuyo","Eres mi razón","Cada día más","Hermosa","Tú eres mi lugar seguro"
+
+];
+
+function createHintText() {
+  const canvasW = 1024;
+  const canvasH = 256;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasW;
+  canvas.height = canvasH;
+  const context = canvas.getContext('2d');
+
+  const text = 'Te amo Arleidy ';
+
+  
+  const bgGrad = context.createRadialGradient(canvasW/2, canvasH/2, 10, canvasW/2, canvasH/2, canvasW/2.2);
+  bgGrad.addColorStop(0, 'rgba(180,0,0,0.6)');
+  bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  context.fillStyle = bgGrad;
+  context.fillRect(0, 0, canvasW, canvasH);
+
+  context.font = `bold 120px Georgia, 'Times New Roman', serif`;
+  context.textAlign = 'center';
+  context.textBaseline = 'middle';
+
+  context.shadowColor = '#8b0000';
+  context.shadowBlur = 50;
+  context.lineWidth = 8;
+  context.strokeStyle = '#cc0000';
+  context.strokeText(text, canvasW/2, canvasH/2);
+
+ 
+  context.shadowColor = '#ff4444';
+  context.shadowBlur = 25;
+  context.fillStyle = '#ff2020';
+  context.fillText(text, canvasW/2, canvasH/2);
+
+  context.shadowColor = 'rgba(255,180,180,0.9)';
+  context.shadowBlur = 10;
+  context.fillStyle = '#ffffff';
+  context.fillText(text, canvasW/2, canvasH/2);
+
+  const textTexture = new THREE.CanvasTexture(canvas);
+  textTexture.needsUpdate = true;
+  const textMaterial = new THREE.MeshBasicMaterial({ map: textTexture, transparent: true, side: THREE.DoubleSide });
+  const planeGeometry = new THREE.PlaneGeometry(28, 7);
+  const hintText = new THREE.Mesh(planeGeometry, textMaterial);
+  hintText.position.set(0, 20, 0);
+  scene.add(hintText);
+  return hintText;
+}
+const sC=[
+  {fill:'#FF69B4',sh:'#C2185B'},
+  {fill:'#FF1493',sh:'#880E4F'},
+  {fill:'#FFB6C1',sh:'#E91E8C'},
+  {fill:'#FFFFFF',sh:'#E91E8C'},
+  {fill:'#FFD6EC',sh:'#C2185B'},
+  {fill:'#FF85C2',sh:'#AD1457'},
+];
+function mkSpr(txt,cd){
+  const cv=document.createElement('canvas');cv.width=1100;cv.height=240;
+  const cx=cv.getContext('2d');
+  cx.font="bold 105px 'Quicksand',sans-serif";
+  // Contorno negro para legibilidad sobre cualquier fondo
+  cx.strokeStyle='rgba(0,0,0,0.55)';cx.lineWidth=8;cx.lineJoin='round';
+  cx.strokeText(txt,550,122);
+  // Sombra rosa
+  cx.shadowColor=cd.sh;cx.shadowBlur=28;
+  cx.fillStyle=cd.fill;cx.textAlign='center';cx.textBaseline='middle';
+  cx.fillText(txt,550,122);
+  cx.shadowBlur=10;
+  cx.fillText(txt,550,122);
+  return new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,blending:THREE.NormalBlending,depthWrite:false}));
+}
+const tGrp=new THREE.Group();scene.add(tGrp);const sMs=[];
+// Escala adaptada: móvil más grande para que se vea bien en pantalla pequeña
+const sprW=isMobile?170:145, sprH=isMobile?39:33;
+for(let i=0;i<80;i++){
+  const cd=sC[i%sC.length],sp=mkSpr(phrases[i%phrases.length],cd);
+  const arm=i%5,base=(arm/5)*Math.PI*2,t2=i/80;
+  const r=160+t2*820,ang=base+t2*Math.PI*4.2;
+  // En móvil achatar la distribución vertical para que quepa en pantalla
+  const ySpread=isMobile?55:110;
+  sp.position.set(Math.cos(ang)*r,(Math.random()-.5)*ySpread,Math.sin(ang)*r);
+  sp.scale.set(sprW,sprH,1);sp.material.opacity=0.0;tGrp.add(sp);sMs.push(sp.material);
+}
+
+const emojis=['😍','💕','🌸','🌷','🌺','💗','✨','💫','🌹','💎'];
+const eGrp=new THREE.Group();scene.add(eGrp);
+function mkEmoji(e){
+  const cv=document.createElement('canvas');cv.width=256;cv.height=256;
+  const cx=cv.getContext('2d');
+  cx.font="195px 'Segoe UI Emoji','Apple Color Emoji',sans-serif";
+  cx.textAlign='center';cx.textBaseline='middle';cx.fillText(e,128,150);
+  const t=new THREE.CanvasTexture(cv);t.colorSpace=THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(52,52),new THREE.MeshBasicMaterial({map:t,transparent:true,alphaTest:.04,depthWrite:false}));
+}
+for(let i=0;i<24;i++){
+  const m=mkEmoji(emojis[i%emojis.length]);
+  const a=i/24*Math.PI*2,r=195+Math.random()*620;
+  m.position.set(Math.cos(a)*r,(Math.random()-.5)*115,Math.sin(a)*r);eGrp.add(m);
+}
+
+scene.add(new THREE.AmbientLight(0xFFE8F8,0.28));
+const pl=new THREE.PointLight(0xFF70B0,2.8,430);scene.add(pl);
+
+window.addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);
+});
+
+const clock=new THREE.Clock();
+
+  /* SISTEMA DE MÚLTIPLES FOTOS FLOTANTES ROSADAS Y REDONDEADAS */
+const GRUPOIMAGENESFLOTANTES = new THREE.Group();
+scene.add(GRUPOIMAGENESFLOTANTES);
+const OBJETOSINTERACTIVOS = [];
+
+// AQUÍ PUEDES AGREGAR TUS ENLACES Y MENSAJES CUANDO ESTÉN LISTOS
+const RECUERDOSBODA = [
+  { img: "Aniversario\te amo.jpg", fecha: "14 de Febrero" },
+  { img:"https://raw.githubusercontent.com/Chrysanthemus2809/Hoyo-Negro/refs/heads/main/1.jpg", mensaje: "Un momento inolvidable a tu lado.", fecha: "15 de Marzo" },
+  { img: "", mensaje: "Nuestras risas bajo las estrellas.", fecha: "20 de Abril" },
+  { img: "", mensaje: "El brillo de tu sonrisa en mi vida.", fecha: "10 de Mayo" },
+  { img: "", mensaje: "Juntos explorando nuestro universo.", fecha: "5 de Junio" },
+  { img: "", mensaje: "Cada segundo contigo es mágico.", fecha: "30 de Julio" }
+];
+
+// FUNCIÓN PARA CREAR UNA TEXTURA ROSADA CON BORDES REDONDEADOS
+function crearTexturaRosada(urlImagen, callback) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 400;
+  canvas.height = 400;
+  const ctx = canvas.getContext('2d');
+
+  // Dibujar fondo rosado con esquinas redondeadas
+  ctx.fillStyle = '#ffb6c1';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, canvas.width, canvas.height, 200);
+  ctx.fill();
+
+  if (urlImagen && urlImagen.trim() !== "") {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = urlImagen;
+    img.onload = () => {
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(0, 0, canvas.width, canvas.height, 200);
+      ctx.clip();
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      ctx.restore();
+      callback(new THREE.CanvasTexture(canvas));
+    };
+    img.onerror = () => {
+      callback(new THREE.CanvasTexture(canvas)); // Mantiene el rosado si falla el link
+    };
+  } else {
+    callback(new THREE.CanvasTexture(canvas));
+  }
+}
+
+RECUERDOSBODA.forEach((recuerdo, index) => {
+  const geom = new THREE.PlaneGeometry(45, 45);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true });
+  const mesh = new THREE.Mesh(geom, mat);
+
+  crearTexturaRosada(recuerdo.img, (textura) => {
+    mat.map = textura;
+    mat.needsUpdate = true;
+  });
+
+  // Distribuir las imágenes de forma circular alrededor de la galaxia
+  const ang = (index / RECUERDOSBODA.length) * Math.PI * 2;
+  const radioDistancia = 350 + (index % 2) * 60; // Variar un poco las distancias
+  mesh.position.set(
+    Math.cos(ang) * radioDistancia,
+    (Math.random() - 0.5) * 80,
+    Math.sin(ang) * radioDistancia
+  );
+  
+  mesh.userData = { mensaje: recuerdo.mensaje, fecha: recuerdo.fecha, imagen: recuerdo.img || "https://raw.githubusercontent.com/Chrysanthemus2809/Hoyo-Negro/refs/heads/main/teamo.jpg" };
+  
+  GRUPOIMAGENESFLOTANTES.add(mesh);
+  OBJETOSINTERACTIVOS.push(mesh);
+});
+
+const RAYCASTER = new THREE.Raycaster();
+const MOUSE = new THREE.Vector2();
+
+window.addEventListener('pointerdown', (e) => {
+  MOUSE.x = (e.clientX / innerWidth) * 2 - 1;
+  MOUSE.y = -(e.clientY / innerHeight) * 2 + 1;
+  RAYCASTER.setFromCamera(MOUSE, camera);
+  const HITS = RAYCASTER.intersectObjects(OBJETOSINTERACTIVOS);
+  if (HITS.length > 0) {
+    const DATA = HITS[0].object.userData;
+    document.getElementById('IMG-FLOTANTE-POPUP').src = DATA.imagen;
+    document.getElementById('TXT-FLOTANTE-FECHA').textContent = DATA.fecha;
+    document.getElementById('TXT-FLOTANTE-MENSAJE').textContent = DATA.mensaje;
+    document.getElementById('MODAL-FLOTANTE').classList.add('ACTIVO');
+  }
+});
+
+  /* ========================================== */
+/* TEXTO DE PARTÍCULAS: "FELIZ ANIVERSARIO"    */
+/* ========================================== */
+let textoParticulasMesh;
+
+function crearTextoEnParticulas() {
+  // 1. Crear un canvas temporal para dibujar el texto y leer sus píxeles
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 1024;
+  canvas.height = 256;
+
+  // 2. Configurar estilo de la fuente del texto
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = "bold 90px 'Cormorant Garamond', serif";
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("¡FELIZ ANIVERSARIO!", canvas.width / 2, canvas.height / 2);
+
+  // 3. Obtener los datos de los píxeles del texto
+  const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const pixels = imgData.data;
+  const posicionesTemp = [];
+
+  // 4. Escanear los píxeles y guardar las coordenadas donde haya texto visible
+  // Incrementamos el paso (j += 3 o 4) para controlar la densidad de partículas
+  const salto = isMobile ? 5 : 3; 
+  for (let y = 0; y < canvas.height; y += salto) {
+    for (let x = 0; x < canvas.width; x += salto) {
+      const index = (y * canvas.width + x) * 4;
+      const alpha = pixels[index + 3]; // Canal alfa (opacidad del píxel)
+
+      if (alpha > 128) {
+        // Centrar y escalar las coordenadas en el espacio 3D de la escena
+        const posX = (x - canvas.width / 2) * 0.55;
+        const posY = -(y - canvas.height / 2) * 0.55;
+        const posZ = (Math.random() - 0.5) * 10; // Ligera profundidad en 3D
+        posicionesTemp.push(posX, posY, posZ);
+      }
+    }
+  }
+
+  // 5. Crear la geometría de partículas de Three.js
+  const geometriaTexto = new THREE.BufferGeometry();
+  const posicionesArray = new Float32Array(posicionesTemp);
+  geometriaTexto.setAttribute('position', new THREE.BufferAttribute(posicionesArray, 3));
+
+  // 6. Asignar material brillante estilo estelar (additive blending)
+  const materialTexto = new THREE.PointsMaterial({
+    size: isMobile ? 2.2 : 1.8,
+    color: 0xffd6ec, // Tono rosado estelar suave
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    opacity: 0.90,
+    depthWrite: false
+  });
+
+  textoParticulasMesh = new THREE.Points(geometriaTexto, materialTexto);
+  
+  // 7. Posicionar el texto arriba del centro de la galaxia/planeta
+  textoParticulasMesh.position.set(0, isMobile ? 180 : 220, 0);
+  scene.add(textoParticulasMesh);
+}
+
+// Ejecutar la función para crear íel texto en partículas
+crearTextoEnParticulas();
+
+  /* ========================================== */
+/* CONVERSIÓN DE IMAGEN A PARTÍCULAS FLOTANTES */
+/* ========================================== */
+
+// Cargar la imagen de referencia (asegúrate de que esté en tu proyecto o usa un enlace válido)
+const urlImagenReferencia = 'https://raw.githubusercontent.com/Chrysanthemus2809/Hoyo-Negro/refs/heads/main/teamo.jpg'; 
+
+const loaderImagen = new Image();
+loaderImagen.crossOrigin = "Anonymous";
+loaderImagen.src = urlImagenReferencia;
+
+loaderImagen.onload = () => {
+  // 1. Crear un canvas oculto para leer los píxeles de la imagen
+  const canvasImg = document.createElement('canvas');
+  const ctxImg = canvasImg.getContext('2d');
+  
+  // Reducimos las dimensiones para controlar el rendimiento y la cantidad de partículas
+  const anchoMax = 80;
+  const altoMax = 80;
+  canvasImg.width = anchoMax;
+  canvasImg.height = altoMax;
+
+  ctxImg.drawImage(loaderImagen, 0, 0, anchoMax, altoMax);
+  const pixelesData = ctxImg.getImageData(0, 0, anchoMax, altoMax).data;
+
+  const posicionesParticulas = [];
+  const coloresParticulas = [];
+
+  // 2. Analizar cada píxel de la imagen
+  for (let y = 0; y < altoMax; y++) {
+    for (let x = 0; x < anchoMax; x++) {
+      const indice = (y * anchoMax + x) * 4;
+      const r = pixelesData[indice];
+      const g = pixelesData[indice + 1];
+      const b = pixelesData[indice + 2];
+      const a = pixelesData[indice + 3];
+
+      // Ignorar píxeles transparentes o muy oscuros
+      const brillo = (r + g + b) / 3;
+      if (a > 100 && brillo > 30) {
+        // Centrar las coordenadas en el espacio 3D (restando la mitad del ancho/alto)
+        const posX = (x - anchoMax / 2) * 0.2;
+        const posY = -(y - altoMax / 2) * 0.2 + 15; // Ajusta el '+15' para subirlo o bajarlo sobre el texto
+        const posZ = (Math.random() - 0.5) * 2;     // Ligera profundidad tridimensional
+
+        posicionesParticulas.push(posX, posY, posZ);
+        
+        // Asignar el color original del píxel a la partícula
+        coloresParticulas.push(r / 255, g / 255, b / 255);
+      }
+    }
+  }
+
+  // 3. Crear la Geometría y Material de las Partículas en Three.js
+  const geomImagenParticulas = new THREE.BufferGeometry();
+  geomImagenParticulas.setAttribute('position', new THREE.Float32BufferAttribute(posicionesParticulas, 3));
+  geomImagenParticulas.setAttribute('color', new THREE.Float32BufferAttribute(coloresParticulas, 3));
+
+  const matImagenParticulas = new THREE.PointsMaterial({
+    size: 0.6,
+    vertexColors: true, // Permite que cada partícula conserve el color de la foto
+    transparent: true,
+    opacity: 0.85,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const mallaImagenParticulas = new THREE.Points(geomImagenParticulas, matImagenParticulas);
+  scene.add(mallaImagenParticulas);
+
+  // 4. Animación de fluctuación en el bucle principal (opcional para que flote)
+  const relojParticulas = new THREE.Clock();
+  function animarImagenFlotante() {
+    requestAnimationFrame(animarImagenFlotante);
+    const tiempo = relojParticulas.getElapsedTime();
+    
+    // Movimiento suave de flotación vertical y rotación leve
+    mallaImagenParticulas.position.y += Math.sin(tiempo * 2) * 0.002;
+    mallaImagenParticulas.rotation.y = Math.sin(tiempo * 0.5) * 0.1;
+  }
+  animarImagenFlotante();
+};
+
+
+  
+  /* ========================================== */
+/* SISTEMA DE COMETAS FUGACES ESPACIALES     */
+/* ========================================== */
+
+// 1. Crear un grupo para contener todos los cometas
+const grupoCometas = new THREE.Group();
+scene.add(grupoCometas);
+
+const cantidadCometas = 4; // Número de cometas simultáneos
+const cometasData = [];
+
+// 2. Función para reiniciar la posición y velocidad de un cometa de forma aleatoria
+function reiniciarCometa(mesh) {
+  mesh.position.set(
+    (Math.random() - 0.5) * 800,
+    Math.random() * 400 + 100,
+    (Math.random() - 0.5) * 800
+  );
+  // Velocidad de desplazamiento en los ejes X, Y, Z
+  mesh.userData.velocidad = {
+    x: (Math.random() - 0.5) * 40 - 6,
+    y: -Math.random() * 40 - 2,
+    z: (Math.random() - 0.5) * 4
+  };
+}
+
+// 3. Generar la geometría y material de cada cometa
+for (let i = 0; i < cantidadCometas; i++) {
+  // Una línea corta que simula la estela del cometa
+  const puntosCometa = [
+    new THREE.Vector3(0, 0, 0),
+    new THREE.Vector3(-15, 5, 0) // Longitud de la estela
+  ];
+  
+  const geometriaCometa = new THREE.BufferGeometry().setFromPoints(puntosCometa);
+  const materialCometa = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending
+  });
+
+  const cometaMesh = new THREE.Line(geometriaCometa, materialCometa);
+  reiniciarCometa(cometaMesh);
+  
+  grupoCometas.add(cometaMesh);
+  cometasData.push(cometaMesh);
+
+  
+}
+
+
+
+
+
+function loop(){
+  requestAnimationFrame(loop);
+  const t=clock.getElapsedTime();
+  galaxyMesh.rotation.y=t*0.022;
+  armsMesh.rotation.y=t*0.022;
+  tGrp.rotation.y=t*0.016;
+  eGrp.rotation.y=t*0.010;
+  eGrp.children.forEach(m=>m.lookAt(camera.position));
+  heart.rotation.y+=0.0035;
+  heart.position.y=(isMobile?100:135)+Math.sin(t*1.7)*7;
+  const pa=diskPts.geometry.attributes.position.array;
+  for(let i=0;i<pN;i++){
+    const sp=0.28+pR[i]*.00085,ang=pA[i]+t*sp;
+    pa[i*3]=Math.cos(ang)*pR[i];pa[i*3+2]=Math.sin(ang)*pR[i];
+  }
+  diskPts.geometry.attributes.position.needsUpdate=true;
+  haloMat.uniforms.uTime.value=t;
+  dM1.uniforms.uTime.value=t;dM2.uniforms.uTime.value=t;dM3.uniforms.uTime.value=t;
+  jM1.uniforms.uTime.value=t;jM2.uniforms.uTime.value=t;
+  sMs.forEach((m,i)=>{const tgt=0.88+Math.sin(t*1.4+i)*0.10;m.opacity=THREE.MathUtils.lerp(m.opacity,tgt,.022);});
+  pl.intensity=2.5+Math.sin(t*2.8)*.55;
+  controls.update();
+  composer.render();
+
+    /* ANIMACIÓN DE ROTACIÓN DE LAS FOTOS FLOTANTES AÑADIDA */
+  GRUPOIMAGENESFLOTANTES.rotation.y = t * 0.16;
+  GRUPOIMAGENESFLOTANTES.children.forEach(m => m.lookAt(camera.position));
+
+    /* ANIMACIÓN DINÁMICA DEL TEXTO DE PARTÍCULAS */
+  if (textoParticulasMesh) {
+    // Hace que el texto rote suavemente de frente hacia la cámara
+    textoParticulasMesh.quaternion.copy(camera.quaternion);
+    
+    // Pequeño efecto de flotación vertical usando la función Seno del tiempo
+    textoParticulasMesh.position.y = (isMobile ? 180 : 220) + Math.sin(t * 1.5) * 6;
+  }
+
+        /* ANIMACIÓN DE LOS COMETAS FUGACES */
+  cometasData.forEach(cometa => {
+    cometa.position.x += cometa.userData.velocidad.x;
+    cometa.position.y += cometa.userData.velocidad.y;
+    cometa.position.z += cometa.userData.velocidad.z;
+
+    // Si el cometa sale de los límites de la pantalla, se reinicia arriba
+    if (cometa.position.y < -300 || Math.abs(cometa.position.x) > 600) {
+      reiniciarCometa(cometa);
+    }
+  });
+/* ========================================== */
+/* DESTELLOS DE CLIC CON LÍMITE DE FRECUENCIA */
+/* ========================================== */
+
+const destellosClickGrupo = new THREE.Group();
+scene.add(destellosClickGrupo);
+
+let ultimoToqueTiempo = 0;
+const intervaloMinimo = 10000; // Milisegundos de espera entre cada destello permitido
+
+window.addEventListener('pointerdown', (e) => {
+  // Ignorar si se hace clic en el modal o botones
+  if (e.target.closest('#MODAL-FLOTANTE') || e.target.closest('button')) return;
+
+  const tiempoActual = Date.now();
+  
+  // Si no ha pasado el tiempo mínimo desde el último toque, cancelamos la ejecución
+  if (tiempoActual - ultimoToqueTiempo < intervaloMinimo) return;
+  
+  ultimoToqueTiempo = tiempoActual; // Actualizamos el registro del último toque
+
+  // Reducimos ligeramente la cantidad de partículas por explosión para mayor fluidez
+  const cantidadParticulas = 10;
+  const geomRafaga = new THREE.BufferGeometry();
+  const posicionesRafaga = [];
+  const velocidadesRafaga = [];
+
+  for (let i = 0; i < cantidadParticulas; i++) {
+    posicionesRafaga.push(0, 0, 0);
+    velocidadesRafaga.push(
+      (Math.random() - 0.5) * 4,
+      (Math.random() - 0.5) * 4,
+      (Math.random() - 0.5) * 4
+    );
+  }
+
+  geomRafaga.setAttribute('position', new THREE.Float32BufferAttribute(posicionesRafaga, 3));
+
+  const matRafaga = new THREE.PointsMaterial({
+    size: 2.5,
+    color: 0xffb6c1,
+    transparent: true,
+    opacity: 1.0,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false
+  });
+
+  const ráfagaMesh = new THREE.Points(geomRafaga, matRafaga);
+  
+  ráfagaMesh.position.set(
+    (Math.random() - 0.5) * 50,
+    (Math.random() - 0.5) * 50,
+    0
+  );
+
+  destellosClickGrupo.add(ráfagaMesh);
+
+  let vida = 30; // Reducido a 30 fotogramas para limpiar la memoria más rápido
+  const animarRafaga = () => {
+    vida--;
+    const posArr = ráfagaMesh.geometry.attributes.position.array;
+    for (let i = 0; i < cantidadParticulas; i++) {
+      posArr[i * 3] += velocidadesRafaga[i * 3];
+      posArr[i * 3 + 1] += velocidadesRafaga[i * 3 + 1];
+      posArr[i * 3 + 2] += velocidadesRafaga[i * 3 + 2];
+    }
+    ráfagaMesh.geometry.attributes.position.needsUpdate = true;
+    matRafaga.opacity = vida / 30;
+
+    if (vida > 0) {
+      requestAnimationFrame(animarRafaga);
+    } else {
+      destellosClickGrupo.remove(ráfagaMesh);
+      geomRafaga.dispose();
+      matRafaga.dispose();
+    }
+  };
+  animarRafaga();
+});
+
+    
+}
+
+  
+  
+loop();
+
+  
+ 
+  /* REFERENCIA DIRECTA (REL) PARA CERRAR EL MODAL FLOTANTE */
+(function() {
+  const botonCerrar = document.getElementById('cerrar');
+  const modalFlotante = document.getElementById('MODAL-FLOTANTE');
+
+  if (botonCerrar && modalFlotante) {
+    // Función que ejecuta el cierre de forma directa
+    const cerrarModal = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      modalFlotante.classList.remove('ACTIVO');
+    };
+
+    
+
+    // Vinculamos tanto el clic como el toque táctil móvil de forma directa
+    botonCerrar.addEventListener('click', cerrarModal);
+    botonCerrar.addEventListener('touchend', cerrarModal);
+  }
+})();
+
+  
+
+
+  
+  
+
+
+
+</script>
+</body>
+</html>
